@@ -5,12 +5,33 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <RelativeLayout
+        android:id="@+id/frame"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <com.google.vrtoolkit.cardboard.CardboardView
-        android:id="@+id/cardboard_view"
+            <com.google.vrtoolkit.cardboard.CardboardView
+                android:id="@+id/cardboard_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:windowIsTranslucent="true"/>
+
+          <!--  <CustomWebView
+                android:id="@+id/webview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                />-->
+
+        </RelativeLayout>
+
+    <!--<CustomWebView
+        android:id="@+id/webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        />-->
+
+
 
 </RelativeLayout><!-- From: file:/C:/Users/Anton/workspace_android/CardboardProcessing/app/src/main/res/layout/common_ui.xml -->

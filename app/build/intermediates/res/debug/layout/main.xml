@@ -4,11 +4,11 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <com.google.vrtoolkit.cardboard.CardboardView
-        android:id="@+id/cardboard_view"
+    <processing.test.carboardprocessing.CardboardP.MySurfaceView
+        android:id="@+id/processing_view"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_height="fill_parent"
+        />
+
 </LinearLayout>
 <!-- From: file:/C:/Users/Anton/workspace_android/CardboardProcessing/app/src/main/res/layout/main.xml -->

@@ -1,0 +1,4 @@
+C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\classes\debug
+C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-1b36ff8f07fcfc19d310de40eef3929aa25a321d.jar
+C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\cardboard-2ad87eb3165631c41499479ed583bc386e4c6b0f.jar
+C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\processing-core-b739c4b1df562143a7c805b3f996ccfcd10b004d.jar

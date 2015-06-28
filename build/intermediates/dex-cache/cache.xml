@@ -4,6 +4,27 @@
     <item
         jar="C:\Users\Anton\workspace_android\CardboardProcessing\app\libs\cardboard.jar"
         jumboMode="false"
+        revision="22.0.1"
+        sha1="362279d4f3f879ad389c300e0bc1f188ad522a08">
+        <dex dex="C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\cardboard-2ad87eb3165631c41499479ed583bc386e4c6b0f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Anton\workspace_android\CardboardProcessing\app\libs\processing-core.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="78e201a11d7f088372bbc39525f97e30eb088a36">
+        <dex dex="C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\processing-core-b739c4b1df562143a7c805b3f996ccfcd10b004d.jar" />
+    </item>
+    <item
+        jar="C:\Users\Anton\workspace_android\CardboardProcessing\app\libs\libprotobuf-java-2.6-nano.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="2ba3ce68542db5a4b672a22606e4fd4631ed5c4f">
+        <dex dex="C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-1b36ff8f07fcfc19d310de40eef3929aa25a321d.jar" />
+    </item>
+    <item
+        jar="C:\Users\Anton\workspace_android\CardboardProcessing\app\libs\cardboard.jar"
+        jumboMode="false"
         revision="20.0.0"
         sha1="362279d4f3f879ad389c300e0bc1f188ad522a08">
         <dex dex="C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\cardboard-2ad87eb3165631c41499479ed583bc386e4c6b0f.jar" />
@@ -18,7 +39,7 @@
     <item
         jar="C:\Users\Anton\workspace_android\CardboardProcessing\app\libs\libprotobuf-java-2.6-nano.jar"
         jumboMode="false"
-        revision="20.0.0"
+        revision="22.0.1"
         sha1="2ba3ce68542db5a4b672a22606e4fd4631ed5c4f">
         <dex dex="C:\Users\Anton\workspace_android\CardboardProcessing\app\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-1b36ff8f07fcfc19d310de40eef3929aa25a321d.jar" />
     </item>

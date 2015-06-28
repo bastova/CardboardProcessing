@@ -1,9 +1,8 @@
 package processing.test.carboardprocessing;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.nfc.FormatException;
 import android.nfc.NdefMessage;
+import android.opengl.GLES20;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,13 +10,11 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.google.vrtoolkit.cardboard.CardboardActivity;
 import com.google.vrtoolkit.cardboard.CardboardDeviceParams;
 import com.google.vrtoolkit.cardboard.CardboardView;
 import com.google.vrtoolkit.cardboard.Eye;
@@ -29,30 +26,15 @@ import com.google.vrtoolkit.cardboard.sensors.NfcSensor;
 import com.google.vrtoolkit.cardboard.sensors.SensorConnection;
 
 import processing.core.*;
-import processing.data.*; 
-import processing.event.*; 
-import processing.opengl.*; 
-
-import processing.opengl.*; 
-
-import java.util.HashMap; 
-import java.util.ArrayList; 
-import java.io.File; 
-import java.io.BufferedReader; 
-import java.io.PrintWriter; 
-import java.io.InputStream; 
-import java.io.OutputStream; 
-import java.io.IOException;
+import processing.core.PApplet;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
-public class CardboardProcessing extends PApplet implements CardboardView.StereoRenderer,
+public class CardboardProcessing extends MyPApplet implements CardboardView.StereoRenderer,
         MagnetSensor.OnCardboardTriggerListener, NfcSensor.OnCardboardNfcListener,
         SensorConnection.SensorListener{
 
     private final SensorConnection sensorConnection = new SensorConnection(this);
-    //private final VolumeKeyState volumeKeyState = new VolumeKeyState(this);
-   // private final FullscreenMode fullscreenMode = new FullscreenMode(this);
     private boolean convertTapIntoTriggerEnabled = true;
 
     private static final int NAVIGATION_BAR_TIMEOUT_MS = 2000;
@@ -65,20 +47,9 @@ public class CardboardProcessing extends PApplet implements CardboardView.Stereo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // CarboardActivity onCreate: //
-        //requestWindowFeature(1);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(128);
-
-       // mMagnetSensor = new MagnetSensor(this);
-       // mMagnetSensor.setOnCardboardTriggerListener(this);
-
-       // mNfcSensor = NfcSensor.getInstance(this);
-       // mNfcSensor.addOnCardboardNfcListener(this);
-
-       // onNfcIntent(getIntent());
 
         this.sensorConnection.onCreate(this);
 
@@ -103,7 +74,6 @@ public class CardboardProcessing extends PApplet implements CardboardView.Stereo
         }
         // CardboardActivity onCreate end //
 
-       // logContentView(getWindow().getDecorView(), "");
         ViewGroup view = (ViewGroup)getWindow().getDecorView();
         LinearLayout overallContent = (LinearLayout)view.getChildAt(0);
         FrameLayout content = (FrameLayout)overallContent.getChildAt(1);
@@ -111,10 +81,19 @@ public class CardboardProcessing extends PApplet implements CardboardView.Stereo
 
         setContentView(R.layout.common_ui);
         CardboardView cardboardView = (CardboardView) findViewById(R.id.cardboard_view);
+
+        // **** Transparency **** // Needs more testing to show Cardboard's overlay
+        /*cardboardView.setZOrderOnTop(true);
+        cardboardView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        cardboardView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);*/
+        //cardboardView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        // *** End Transparent *** //
+
         cardboardView.setRenderer(this);
         setCardboardView(cardboardView);
 
-        sf.setZOrderMediaOverlay(true);
+        sf.setZOrderMediaOverlay(true); // Put Processing on top of cardboard surfaceview
+
         FrameLayout fl = (FrameLayout) findViewById(android.R.id.content);
         RelativeLayout ll = (RelativeLayout) fl.getChildAt(0);
         ll.addView(sf);
@@ -158,32 +137,132 @@ public class CardboardProcessing extends PApplet implements CardboardView.Stereo
         }
     }
 
+    // ************************************ //
+    // ********** Processing Code ********* //
+    // ************************************ //
+
     float camRadius = 320;
 
+    PGraphics lv; //left viewport
+    PGraphics rv; //right viewport
+
+    float panx, pany, panz;
+    float camx, camy, camz;
+
+    PGraphics big;
+    PGraphics big2;
+
+    PGraphics feedback;  // Image drawn onto by & re-fed to the shader every loop
+    public void setup() {
+
+        size(displayWidth, displayHeight, OPENGL);
+
+        noStroke();
+        frameRate(60);
+
+        feedback = createGraphics(width/2, height/2, OPENGL);
+
+        feedback.beginDraw();
+        feedback.background(0);
+        feedback.endDraw();
+    }
+    public void draw() {
+
+
+        feedback.beginDraw();
+
+        if (mousePressed) {
+            feedback.fill( 255 );
+            feedback.noStroke();
+            feedback.ellipse( mouseX, mouseY, 100, 100 );
+        }
+
+        feedback.endDraw();
+
+        image( feedback, 0, 0 );
+
+        text(frameRate, 10, 10);
+    }
+    /*
 public void setup()
   {
 
-    smooth();
+      size(displayWidth,displayHeight,P3D); //used to set P3D renderer
+      orientation(LANDSCAPE); //causes crashing if not started in this orientation
+
+      big = createGraphics(displayWidth/2, displayHeight, P3D);
+      big.beginDraw();
+      big.endDraw();
+
+      big2 = createGraphics(displayWidth/2, displayHeight, P3D);
+
+         big.beginDraw();
+         big.background(128);
+         big.line(20, 1800, 1800, 900);
+         // etc..
+         big.endDraw();
+
+      image(big, 0,0);
+
+      big2.beginDraw();
+      big2.background(222);
+      big2.line(20, 1800, 1800, 900);
+      // etc..
+      big2.endDraw();
+
+      Log.w("processing", String.valueOf(displayHeight));
+      Log.w("processing", String.valueOf(displayWidth));
+      //lv = createGraphics(displayWidth/2,displayHeight,P3D); //size of left viewport
+      //rv = createGraphics(displayWidth/2,displayHeight,P3D);
+   // smooth();
   }
 
 public void draw()
   {
-    background(0,0,100);
-    translate(400,300,0);
-    background(255);
-    fill(255,50,50);
+   // background(0,0,100);
+   // translate(400,300,0);
+    //background(255);
+   // fill(255,50,50);
 
-    float camX = 0 + sin(0) * camRadius;
+      //panx = panx-mx*10;
+      panx = 0;
+      pany = 0;
+      panz = 0;
+      camx = 0;
+      //eyey = -20*az;
+      camy = -500f;
+      camz = 320;
+
+     // ViewPort(lv, camx, camy, camz, panx, pany, panz, -15);
+     // ViewPort(rv, camx, camy, camz, panx, pany, panz, 15);
+
+//add the two viewports to your main panel
+    //  image(lv, 0, 0);
+    //  image(rv, displayWidth/4+10, 0);
+
+    /*float camX = 0 + sin(0) * camRadius;
     float camY = 0 - 50;
     float camZ = 0 + cos(0) * camRadius;
 
-    camera(camX, camY, camZ, 0, 0, 0, 0,1,0);
+    camera(camx, camy, camz, 0, 0, 0, 0,1,0);
 
     pushMatrix();
     translate(0,100,-200);
     box(200);
-    popMatrix();
-  }
+    popMatrix();*/
+ // }
+
+    void ViewPort(PGraphics v, float x, float y, float z, float px, float py, float pz, int eyeoff){
+        v.beginDraw();
+        v.background(102);
+        v.lights();
+        v.pushMatrix();
+        v.camera(x+eyeoff, y, z, px, py, pz, 0.0f, 1.0f, 0.0f);
+        v.noStroke();
+        v.box(20);
+        v.popMatrix();
+        v.endDraw();
+    }
 
 
   public int sketchWidth() { return displayWidth; }
@@ -250,14 +329,17 @@ public void draw()
 
     @Override
     public void onNewFrame(HeadTransform headTransform) {
+        GLES20.glClearColor(0, 0, 1, 0f);
+        GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
         float[] headView = new float[16];
         headTransform.getHeadView(headView, 0);
-        Log.w("head", String.valueOf(headView[0]) + " " +
+       /* Log.w("head", String.valueOf(headView[0]) + " " +
                 String.valueOf(headView[1]) + " " +
                 String.valueOf(headView[2]) + " " +
                 String.valueOf(headView[3]) + " " +
                 String.valueOf(headView[4]) + " " +
-                String.valueOf(headView[5]));
+                String.valueOf(headView[5]));*/
     }
 
     @Override
